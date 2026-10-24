@@ -12,8 +12,8 @@ collect_seconds: 240      # Blueskyサンプリング秒数
 min_users: 6              # 📈の最低ユニークユーザー数
 min_ratio: 5.0            # 📈の平常値比
 warmup_runs: 24           # ベースライン構築回数（この間 📈は出ない）
-top_n: 5                  # 種類ごとの最大通知件数
-renotify_hours: 12        # 同じ語を再通知しない時間
+top_n: 3                  # 種類ごとの最大通知件数（暫定: 5→3）
+renotify_hours: 24        # 同じ語を再通知しない時間（暫定: 12→24）
 only_related: false       # true にすると keywords 一致のみ通知
 landing_users: 3          # 日本語名の言及がこの人数以上なら🔥、未満なら🌊
 min_sample_posts: 300     # これ未満の投稿数なら Bluesky 判定をスキップ
