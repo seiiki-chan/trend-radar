@@ -1,8 +1,10 @@
 # src/main.py
 import math
 import os
+import re
 import sys
 import time
+import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -25,6 +27,8 @@ DEFAULTS = {
                       {"geo": "KR", "wiki": "ko"}, {"geo": "TW", "wiki": "zh"}],
 }
 
+_ASCII_KW = re.compile(r"[A-Za-z0-9]+")
+
 
 def log(msg):
     print(f"[radar] {msg}", flush=True)
@@ -41,8 +45,22 @@ def load_config():
 
 
 def related(text, keywords):
-    t = str(text).casefold()
-    return any(k and str(k).casefold() in t for k in keywords)
+    """自社キーワードに一致するか。
+    - 英数字のみのキーワード: 前後が半角英数字でないときだけ一致（単語境界）
+    - 日本語などを含むキーワード: 部分一致
+    - NFKC正規化（全角英数字を半角にそろえる）と大文字小文字の無視を行う
+    """
+    t = unicodedata.normalize("NFKC", str(text)).casefold()
+    for k in keywords:
+        k = unicodedata.normalize("NFKC", str(k)).strip().casefold()
+        if not k:
+            continue
+        if _ASCII_KW.fullmatch(k):
+            if re.search(r"(?<![a-z0-9])" + re.escape(k) + r"(?![a-z0-9])", t):
+                return True
+        elif k in t:
+            return True
+    return False
 
 
 def pick(items, notified, now, window, top_n, prefix):
@@ -59,6 +77,9 @@ def main():
         log("DRY_RUN: Discordへ送信せず、state/*.json も保存しません")
         log("DRY_RUN selftest sanitize: "
             + sanitize("@everyone <@123> `x` **b** [a](https://evil.example) \u202e"))
+        samples = ["mail", "AI news", "AI・ゲーム", "AIが進化", "OpenAI"]
+        log("DRY_RUN selftest related(AI): "
+            + " ".join(f"{s}={related(s, ['AI'])}" for s in samples))
     cfg = load_config()
     now = time.time()
     kw = cfg["keywords"]
