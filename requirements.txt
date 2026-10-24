@@ -1,0 +1,6 @@
+# requirements.txt
+requests
+websocket-client
+fugashi
+unidic-lite
+pyyaml
