@@ -1,0 +1,27 @@
+# config.yaml
+# keywords は自社ジャンルの語（部分一致・優先表示用）
+keywords:
+  - VTuber
+  - ゲーム
+  - アニメ
+  - IT
+  - AI
+  - ライフハック
+
+collect_seconds: 240      # Blueskyサンプリング秒数
+min_users: 6              # 📈の最低ユニークユーザー数
+min_ratio: 5.0            # 📈の平常値比
+warmup_runs: 24           # ベースライン構築回数（この間 📈は出ない）
+top_n: 5                  # 種類ごとの最大通知件数
+renotify_hours: 12        # 同じ語を再通知しない時間
+only_related: false       # true にすると keywords 一致のみ通知
+landing_users: 3          # 日本語名の言及がこの人数以上なら🔥、未満なら🌊
+min_sample_posts: 300     # これ未満の投稿数なら Bluesky 判定をスキップ
+hn_min_score: 300
+hn_max_age_hours: 8
+
+overseas_geos:
+  - {geo: US, wiki: en}
+  - {geo: GB, wiki: en}
+  - {geo: KR, wiki: ko}
+  - {geo: TW, wiki: zh}
